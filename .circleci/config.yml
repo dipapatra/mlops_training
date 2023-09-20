@@ -2,43 +2,43 @@ version: 2.1
 jobs:
   staging_deployment:
     docker:
-      -image: circlrci/python:3.8
+      - image: circlrci/python:3.8
     # working_directory:
     steps:
-      -checkout
-      -setup_remote_docker:
-        version: 19.03.13
-      -run: 
-        name: Install Dependencies
-        command: |
-        pip install -r requirements.txt
-      -run: 
-        name: Run Tests
-        command: |
-          pytest test/test_app.py
-      -run:
-        name: Build Docker Image
-        command: |
-          docker build -t mlops_demo .
-      -run: 
-        name: Build Docker Image
-        command: |
-          docker tag mlops_demo:latest 680161846045.dkr.ecr.us-east-2.amazonaws.com/mlops_demo:latest
-      -run: 
-        name: Deploy to Stageing
-        Command: |
-          sudo pip install awscli
-          eval $(aws ecr get-login --no-include-email --region us-east-1)
-          aws ecr get-login --no-include-email --region us-east-1
-          docker push 680161846045.dkr.ecr.us-east-2.amazonaws.com/mlops_demo:latest
+      - checkout
+      - setup_remote_docker:
+         version: 19.03.13
+      - run: 
+         name: Install Dependencies
+         command: |
+           pip install -r requirements.txt
+      - run: 
+         name: Run Tests
+         command: |
+           pytest test/test_app.py
+      - run:
+         name: Build Docker Image
+         command: |
+           docker build -t mlops_demo .
+      - run: 
+         name: Build Docker Image
+         command: |
+           docker tag mlops_demo:latest 680161846045.dkr.ecr.us-east-2.amazonaws.com/mlops_demo:latest
+      - run: 
+         name: Deploy to Stageing
+         Command: |
+           sudo pip install awscli
+           eval $(aws ecr get-login --no-include-email --region us-east-1)
+           aws ecr get-login --no-include-email --region us-east-1
+           docker push 680161846045.dkr.ecr.us-east-2.amazonaws.com/mlops_demo:latest
 
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      -staging_deployment:
-        filters:
-          branches:
-            only:
-              -main 
+      - staging_deployment:
+         filters:
+           branches:
+             only:
+               - main 
